@@ -11,12 +11,12 @@ abstract class Global {
   static const Color red = Color(0xffF25767);
   static const Color orange = Color(0xffFFA000);
 
-  static const List cardData = [
+  static const List<Map<String, dynamic>> cardData = [
     {
       'color': white,
       'backGroundColor': blue,
       'icon': Icons.person,
-      'title': 'sss',
+      'title': 'n n n ',
       'headline': 'Google',
       'buttonTitle': 'Login',
     },

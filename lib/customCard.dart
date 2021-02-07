@@ -39,7 +39,7 @@ class TextCard extends StatelessWidget {
                       child: Padding(
                         padding: new EdgeInsets.only(left: 30.0),
                         child: Text(
-                          " card.title titletitletitletitletitle ",
+                          card.title,
                           style: TextStyle(color: Global.white, fontSize: 15),
                         ),
                       ),
@@ -98,8 +98,7 @@ class ImgCard extends StatelessWidget {
                         ),
                         color: const Color(0xff7c94b6),
                         image: DecorationImage(
-                          image: NetworkImage(
-                              "https://upload.wikimedia.org/wikipedia/commons/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg"),
+                          image: NetworkImage(card.title),
                           fit: BoxFit.cover,
                         ),
                       ),

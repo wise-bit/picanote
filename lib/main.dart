@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sign_in_flutter/login_page.dart';
+import 'package:sign_in_flutter/share_play.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: SharePlay(),
     );
   }
 }
