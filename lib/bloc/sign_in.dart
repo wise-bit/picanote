@@ -21,6 +21,7 @@ Future<String> signInWithGoogle() async {
     idToken: googleSignInAuthentication.idToken,
   );
 
+//Authorization: Bearer ID_TOKEN
   final UserCredential authResult =
       await _auth.signInWithCredential(credential);
   final User user = authResult.user;
@@ -30,9 +31,9 @@ Future<String> signInWithGoogle() async {
     assert(user.email != null);
     assert(user.displayName != null);
     assert(user.photoURL != null);
-
     name = user.displayName;
     email = user.email;
+    return user.getIdToken();
     imageUrl = user.photoURL;
 
     // Only taking the first part of the name, i.e., First Name
@@ -56,6 +57,5 @@ Future<String> signInWithGoogle() async {
 
 Future<void> signOutGoogle() async {
   await googleSignIn.signOut();
-
   print("User Signed Out");
 }
