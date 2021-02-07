@@ -51,24 +51,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class cardObj{
-  String _date;
-  cardObj({String date = "date"}){
-    this._date = title;
-  }
-
-  void set title(String theTitle){
-    _date = theTitle;
-  }
-  String get title{
-    return _date;
-  }
-}
-
-class imageCard extends cardObj{
   String _link;
-  imageCard({String link = "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg", String title = "Title", String subtitle = "Subtitle"}){
+  String _date;
+  String _content;
+  cardObj({String link = "textCard", String date = "Title", String content = "imageCard"}){
+    this._date = date;
+    this._content = content;
     this._link = link;
-    this._date = title;
+  }
+
+  void set date(String theDate){
+    _date = theDate;
+  }
+  String get date{
+    return _date;
   }
   void set link(String theLink){
     _link = theLink;
@@ -76,18 +72,17 @@ class imageCard extends cardObj{
   String get link{
     return _link;
   }
-}
-
-class textCard extends cardObj{
-  String _content;
-  textCards({String content = "Insert notes here", String title = "Title", String subtitle = "Subtitle"}){
-    this._content = content;
-    this._date = title;
-  }
   void set content(String theContent){
     _content = theContent;
   }
   String get content{
+    return _content;
+  }
+
+  String get preview{
+    if(_content.length > 320){
+      return '\n' + _content.substring(0, 300) + '...';
+    }
     return _content;
   }
 }
@@ -153,25 +148,42 @@ class Search extends SearchDelegate{
     }
     else{
       for(int i = 0; i < listExample.length; i++){
-        if(listExample[i] is imageCard && recentList.contains((imageCard) listExample[i]._link)){
-          suggestionList.add(listExample[i]);
+        if(listExample[i].content == "imageCard"){
+          // if imagecard
+          return ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  suggestionList[index].date,
+                ),
+                onTap: (){
+                  res = suggestionList[index].date;
+                  showResults(context);
+                },
+              );
+            },
+          );
+        }
+        // if textcard
+        else{
+          return ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  suggestionList[index].date,
+                ),
+                onTap: (){
+                  res = suggestionList[index].date;
+                  showResults(context);
+                },
+              );
+            },
+          );
         }
       }
     }
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(
-            suggestionList[index]._title,
-          ),
-          onTap: (){
-            res = suggestionList[index].title;
-            showResults(context);
-          },
-        );
-      },
-    );
   }
 }
 
@@ -201,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     Widget _body(cardObj card){
-      if(card is imageCard){
+      if(card.content == "imageCard"){
         return Container(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
@@ -210,65 +222,71 @@ class _MyHomePageState extends State<MyHomePage> {
           width: double.maxFinite,
           child: Card(
             elevation: 5,
+            color: Color(0xffffd4a6),
             child: Column(
-                children: <Widget>[
-                  Card(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment.center,
-                            child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: const Color(0xff7c94b6),
-                                image: DecorationImage(
-                                  image: NetworkImage(card._link),
-                                  fit: BoxFit.fitWidth,
-                                  alignment: Alignment.topCenter,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            )
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                ),
+                ListTile(
+                  tileColor: Color(0xffedcaa4),
+                  title: Text(card._date),
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 226,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff7c94b6),
+                        image: DecorationImage(
+                          image: NetworkImage(card._link),
+                          fit: BoxFit.fitWidth,
+                          alignment: Alignment.topCenter,
                         ),
-                        /*ListTile(
-                          leading: Icon(Icons.album),
-                          title: Text(title),
-                          subtitle: Text(subtitle),
-                        ),*/
-                      ],
-                    ),
-                  ),
-                ]
+                      ),
+                    )
+                ),
+              ],
+
             ),
           ),
         );
       }
-      else if(card is textCard){
+      else if(card.link == "textCard"){
         return Container(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
           padding: EdgeInsets.fromLTRB(10,10,10,0),
-          height: 300,
+          height: 200,
           width: double.maxFinite,
           child: Card(
             elevation: 5,
+            color: Color(0xffffd4a6),
             child: Column(
                 children: <Widget>[
-                  Card(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                            alignment: Alignment.center,
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.album),
-                          title: Text(card._date),
-                          subtitle: Text(card._content),
-                        ),
-                      ],
+                    Container(
+                        alignment: Alignment.center,
                     ),
-                  ),
-                ]
+                    ListTile(
+                      tileColor: Color(0xffedcaa4),
+                      title: Text(card._date),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                        ),
+                        Flexible(
+                          child:Text(
+                              card.preview,
+                              textAlign: TextAlign.left
+                          ),
+                        )
+
+                      ]
+                    )
+                  ],
+
             ),
           ),
         );
@@ -276,8 +294,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     }
 
-    textCard cardOwl = new textCard();
-    imageCard coolGuy = new imageCard(link: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg", title: "Ice Cube", subtitle: "Today was a good day");
+    cardObj cardOwl = new cardObj(content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod tristique metus, sit amet commodo ante vehicula nec. Nam finibus, augue et imperdiet porta, ante augue convallis felis, eu viverra felis elit vel erat. Cras suscipit lacus a ex placerat tempor. Duis facilisis iaculis risus dignissim molestie. Suspendisse id tortor ultrices, porta enim vitae, feugiat massa. Quisque quam mauris, vehicula in maximus nec, rhoncus sed sapien. Cras placerat, lacus vel fermentum tempus, nisi nunc vehicula orci, ut posuere ex mauris ut enim. Phasellus euismod quis risus ac varius. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur dapibus mi gravida lacus condimentum bibendum.", date: "Monday");
+    cardObj coolGuy = new cardObj(link: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg", date: "Ice Cube");
     listCards.append(cardOwl);
     listCards.append(coolGuy);
 
@@ -285,12 +303,12 @@ class _MyHomePageState extends State<MyHomePage> {
     final List<String> list = List.generate(10, (index) => "Text $index");
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Color(0xff252552),
+      backgroundColor: Color(0xfffff3e6),
       body: Stack(
 
         children: <Widget>[
           ListView(
-            padding: EdgeInsets.only(top: 0),
+            padding: EdgeInsets.only(top: 80),
             children: [_body(cardOwl), _body(coolGuy)],
           ),
           Positioned(
@@ -303,14 +321,14 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(
                   widget.title,
                   style: TextStyle(
-                  color: Colors.white,
+                  //color: Colors.white,
                 ),
               ),
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               actions: <Widget>[
                 IconButton(
-                  color: Colors.white,
+                  //color: Colors.white,
                   onPressed:(){
                     showSearch(context: context, delegate: Search(listCards.getList()));
                   },
