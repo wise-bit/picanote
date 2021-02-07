@@ -51,38 +51,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class cardObj{
-  String _date;
-  cardObj({String date = "date"}){
-    this._date = title;
-  }
-
-  void set title(String theTitle){
-    _date = theTitle;
-  }
-  String get title{
-    return _date;
-  }
-}
-
-class imageCard extends cardObj{
   String _link;
-  imageCard({String link = "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg", String title = "Title", String subtitle = "Subtitle"}){
+  String _date;
+  String _content;
+  cardObj({String link = "textCard", String date = "Title", String content = "imageCard"}){
+    this._date = date;
+    this._content = content;
     this._link = link;
-    this._date = title;
+  }
+
+  void set date(String theDate){
+    _date = theDate;
+  }
+  String get date{
+    return _date;
   }
   void set link(String theLink){
     _link = theLink;
   }
   String get link{
     return _link;
-  }
-}
-
-class textCard extends cardObj{
-  String _content;
-  textCards({String content = "Insert notes here", String title = "Title", String subtitle = "Subtitle"}){
-    this._content = content;
-    this._date = title;
   }
   void set content(String theContent){
     _content = theContent;
@@ -153,25 +141,42 @@ class Search extends SearchDelegate{
     }
     else{
       for(int i = 0; i < listExample.length; i++){
-        if(listExample[i] is imageCard && recentList.contains((imageCard) listExample[i]._link)){
-          suggestionList.add(listExample[i]);
+        if(listExample[i].content == "imageCard"){
+          // if imagecard
+          return ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  suggestionList[index].date,
+                ),
+                onTap: (){
+                  res = suggestionList[index].date;
+                  showResults(context);
+                },
+              );
+            },
+          );
+        }
+        // if textcard
+        else{
+          return ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(
+                  suggestionList[index].date,
+                ),
+                onTap: (){
+                  res = suggestionList[index].date;
+                  showResults(context);
+                },
+              );
+            },
+          );
         }
       }
     }
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(
-            suggestionList[index]._title,
-          ),
-          onTap: (){
-            res = suggestionList[index].title;
-            showResults(context);
-          },
-        );
-      },
-    );
   }
 }
 
@@ -201,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     Widget _body(cardObj card){
-      if(card is imageCard){
+      if(card.content == "imageCard"){
         return Container(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
@@ -243,12 +248,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
       }
-      else if(card is textCard){
+      else if(card.link == "textCard"){
         return Container(
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
           padding: EdgeInsets.fromLTRB(10,10,10,0),
-          height: 300,
+          height: 200,
           width: double.maxFinite,
           child: Card(
             elevation: 5,
@@ -261,14 +266,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             alignment: Alignment.center,
                         ),
                         ListTile(
-                          leading: Icon(Icons.album),
                           title: Text(card._date),
-                          subtitle: Text(card._content),
                         ),
                       ],
                     ),
                   ),
+                  Text(card._content),
                 ]
+
             ),
           ),
         );
@@ -276,8 +281,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     }
 
-    textCard cardOwl = new textCard();
-    imageCard coolGuy = new imageCard(link: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg", title: "Ice Cube", subtitle: "Today was a good day");
+    cardObj cardOwl = new cardObj(content: "i love ice cream", date: "english class");
+    cardObj coolGuy = new cardObj(link: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Ice-Cube_2014-01-09-Chicago-photoby-Adam-Bielawski.jpg", date: "Ice Cube");
     listCards.append(cardOwl);
     listCards.append(coolGuy);
 
@@ -290,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         children: <Widget>[
           ListView(
-            padding: EdgeInsets.only(top: 0),
+            padding: EdgeInsets.only(top: 80),
             children: [_body(cardOwl), _body(coolGuy)],
           ),
           Positioned(
