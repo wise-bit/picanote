@@ -33,7 +33,6 @@ Future<String> signInWithGoogle() async {
     assert(user.photoURL != null);
     name = user.displayName;
     email = user.email;
-    return user.getIdToken();
     imageUrl = user.photoURL;
 
     // Only taking the first part of the name, i.e., First Name

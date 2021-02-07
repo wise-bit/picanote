@@ -22,7 +22,7 @@ abstract class Global {
     },
     {
       'color': white,
-      'backGroundColor': red,
+      'backGroundColor': lightBlue,
       'icon': Icons.videocam,
       'title': 'Phase 2 Cameras',
       'headline': 'Remote camera configuration',
